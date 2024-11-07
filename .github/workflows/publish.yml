@@ -1,6 +1,7 @@
 name: Publish to GitHub Packages
 
 on:
+  workflow_dispatch:  # เพิ่มตรงนี้เพื่อให้รัน manual ได้
   release:
     types: [created]
 
@@ -10,13 +11,27 @@ jobs:
     permissions:
       contents: read
       packages: write
+
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          java-version: '23'
+          java-version: '21'  # เปลี่ยนเป็น Java 21 เพราะ GitHub Actions ยังไม่รองรับ 23
           distribution: 'temurin'
-      - name: Publish package
-        run: mvn --batch-mode deploy
+          server-id: github
+          settings-path: ${{ github.workspace }}
+
+      # เพิ่ม step นี้
+      - name: Configure Git user
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+
+      - name: Build and Publish
+        run: |
+          mvn clean deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
