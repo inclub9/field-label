@@ -1,4 +1,3 @@
-// src/main/java/inclub9/processor/FieldLabelProcessor.java
 package inclub9.processor;
 
 import inclub9.annotation.FieldLabel;
@@ -44,9 +43,12 @@ public class FieldLabelProcessor extends AbstractProcessor {
                 String fieldName = element.getSimpleName().toString();
                 String label = element.getAnnotation(FieldLabel.class).value();
 
+                // Convert camelCase to UPPER_CASE
+                String constantName = camelCaseToUpperUnderscore(fieldName);
+
                 labelsByClass.computeIfAbsent(className, k -> new TreeSet<>())
                         .add(String.format("    public static final String %s = \"%s\";",
-                                fieldName.toUpperCase(), label));
+                                constantName, label));
             }
 
             for (Map.Entry<String, Set<String>> entry : labelsByClass.entrySet()) {
@@ -61,6 +63,23 @@ public class FieldLabelProcessor extends AbstractProcessor {
             }
         }
         return true;
+    }
+
+    private String camelCaseToUpperUnderscore(String input) {
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < input.length(); i++) {
+            char currentChar = input.charAt(i);
+
+            // Add underscore if it's an uppercase letter and not the first character
+            if (i > 0 && Character.isUpperCase(currentChar)) {
+                result.append('_');
+            }
+
+            result.append(Character.toUpperCase(currentChar));
+        }
+
+        return result.toString();
     }
 
     private void generateLabelClass(String className, Set<String> constants) throws IOException {

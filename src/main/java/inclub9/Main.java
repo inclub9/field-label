@@ -5,7 +5,7 @@ import inclub9.entity.User_;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println(UserLabel.FULLNAME);
+        System.out.println(UserLabel.FULL_NAME);
         System.out.println(User_.FULL_NAME);
     }
 }
