@@ -12,11 +12,23 @@
 	<name>Field Label</name>
 	<description>Field label annotation processor for generate constant</description>
 
+	<!-- เพิ่ม properties สำหรับ GitHub -->
 	<properties>
 		<maven.compiler.source>22</maven.compiler.source>
 		<maven.compiler.target>22</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<github.owner>inclub9</github.owner>
+		<github.repo>field-label</github.repo>
 	</properties>
+
+	<!-- กำหนด distributionManagement สำหรับ GitHub Packages -->
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/${github.owner}/${github.repo}</url>
+		</repository>
+	</distributionManagement>
 
 	<dependencies>
 		<dependency>
@@ -104,6 +116,16 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+
+			<!-- Deploy Plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<altDeploymentRepository>github::default::https://maven.pkg.github.com/${github.owner}/${github.repo}</altDeploymentRepository>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
