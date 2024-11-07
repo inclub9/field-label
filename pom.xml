@@ -6,7 +6,7 @@
 
 	<groupId>inclub9</groupId>
 	<artifactId>field-label</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.5</version>
 	<packaging>jar</packaging>
 
 	<name>Field Label</name>
