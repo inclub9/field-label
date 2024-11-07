@@ -13,36 +13,30 @@
 	<description>Field label annotation processor for generate constant</description>
 
 	<properties>
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
+		<maven.compiler.source>22</maven.compiler.source>
+		<maven.compiler.target>22</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-jpamodelgen -->
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-jpamodelgen</artifactId>
-			<scope>provided</scope>
 			<version>6.5.3.Final</version>
+			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
 		<dependency>
 			<groupId>jakarta.persistence</groupId>
 			<artifactId>jakarta.persistence-api</artifactId>
 			<version>3.2.0</version>
+			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.projectlombok</groupId>-->
-<!--			<artifactId>lombok</artifactId>-->
-<!--			<optional>true</optional>-->
-<!--			<version>1.18.34</version>-->
-
-<!--		</dependency>-->
 	</dependencies>
 
 	<build>
 		<plugins>
-			<!-- Compiler Plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -51,56 +45,38 @@
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.target}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
-					<annotationProcessors>
-						<annotationProcessor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</annotationProcessor>
-						<annotationProcessor>inclub9.processor.FieldLabelProcessor</annotationProcessor>
-					</annotationProcessors>
+					<compilerArgs>
+						<arg>-proc:none</arg>
+					</compilerArgs>
 				</configuration>
+			</plugin>
+
+			<!-- Source Plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.3.0</version>
 				<executions>
 					<execution>
-						<id>compile-processor</id>
-						<phase>generate-sources</phase>
+						<id>attach-sources</id>
 						<goals>
-							<goal>compile</goal>
+							<goal>jar-no-fork</goal>
 						</goals>
-						<configuration>
-							<proc>none</proc>
-							<includes>
-								<include>inclub9/annotation/FieldLabel.java</include>
-								<include>inclub9/processor/FieldLabelProcessor.java</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>process-annotations</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-						<configuration>
-							<proc>only</proc>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 
-			<!-- Shade Plugin for creating uber JAR -->
+			<!-- Javadoc Plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.5.2</version>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.6.3</version>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<id>attach-javadocs</id>
 						<goals>
-							<goal>shade</goal>
+							<goal>jar</goal>
 						</goals>
-						<configuration>
-							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-							</transformers>
-							<finalName>field-label-${project.version}-standalone</finalName>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -118,7 +94,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/classes/META-INF/services</outputDirectory>
+							<outputDirectory>${project.build.outputDirectory}/META-INF/services</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/main/resources/META-INF/services</directory>
