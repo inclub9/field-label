@@ -3,8 +3,6 @@ name: Maven Package
 on:
   push:
     branches: [ main, master ]
-    tags:
-      - 'v*'  # จะทำงานเมื่อมีการ push tag ที่ขึ้นต้นด้วย v
   pull_request:
     branches: [ main, master ]
   release:
@@ -19,53 +17,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # จำเป็นสำหรับ version tags
 
       - name: Set up JDK 22
         uses: actions/setup-java@v4
         with:
           java-version: '22'
           distribution: 'temurin'
-          server-id: github
-          settings-path: ${{ github.workspace }}
           cache: maven
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run Tests
-        run: mvn -B test
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # ตรวจสอบและเก็บ build artifacts
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: package
-          path: target/*.jar
-
-      # Deploy เมื่อมีการ create release หรือ push tag
       - name: Publish to GitHub Packages
-        if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
-        run: |
-          mvn --batch-mode deploy \
-          -Dgithub.owner=${{ github.repository_owner }} \
-          -Dgithub.repo=${{ github.event.repository.name }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # สร้าง release notes อัตโนมัติ (optional)
-      - name: Generate Release Notes
         if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            target/*.jar
-            target/*.pom
-          generate_release_notes: true
+        run: mvn --batch-mode deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
