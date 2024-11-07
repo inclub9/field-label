@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 import java.util.*;
 
 @SupportedAnnotationTypes("inclub9.annotation.FieldLabel")
-@SupportedSourceVersion(SourceVersion.RELEASE_23)
+@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class FieldLabelProcessor extends AbstractProcessor {
 
     @Override
