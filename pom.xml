@@ -6,7 +6,7 @@
 
 	<groupId>com.github.inclub9</groupId>
 	<artifactId>field-label</artifactId>
-	<version>1.0.5</version>
+	<version>1.0.6</version>
 	<packaging>jar</packaging>
 
 	<name>Field Label</name>
@@ -19,6 +19,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<github.owner>inclub9</github.owner>
 		<github.repo>field-label</github.repo>
+		<auto-service.version>1.1.1</auto-service.version>
 	</properties>
 
 	<!-- กำหนด distributionManagement สำหรับ GitHub Packages -->
@@ -31,6 +32,14 @@
 	</distributionManagement>
 
 	<dependencies>
+		<!-- Auto Service -->
+		<dependency>
+			<groupId>com.google.auto.service</groupId>
+			<artifactId>auto-service</artifactId>
+			<version>${auto-service.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-jpamodelgen</artifactId>
@@ -57,9 +66,13 @@
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.target}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
-					<compilerArgs>
-						<arg>-proc:none</arg>
-					</compilerArgs>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>com.google.auto.service</groupId>
+							<artifactId>auto-service</artifactId>
+							<version>${auto-service.version}</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 
@@ -89,32 +102,6 @@
 						<goals>
 							<goal>jar</goal>
 						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- Resources Plugin -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.3.1</version>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-
-						<configuration>
-							<outputDirectory>${project.build.outputDirectory}/META-INF/services</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/resources/META-INF/services</directory>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
