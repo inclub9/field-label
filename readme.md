@@ -73,12 +73,18 @@ public class UserService {
 
 ## Benefits
 
-- Centralized management of field labels
-- Type-safe access to labels
-- Prevents typos through compile-time checking
-- Easy label updates and maintenance
+- Bridges the gap between code and business terminology, improving communication between developers and business stakeholders
+- Reduces the gap between code implementation and business domain, ensuring development aligns with user requirements
+- Centralizes label management in one place, making it easy to adapt to business requirement changes
+- Prevents typing errors through compile-time checking
+- Supports efficient internationalization (i18n)
+- Saves development time by eliminating the need to create and maintain constant classes manually
+- Improves code readability by using terminology that matches business team understanding
+- Establishes naming standards across the system, enhancing team development efficiency
+- Provides type-safe access to labels
 - Suitable for internationalization (i18n)
 - No manual creation of constant classes required
+- Easy label updates and maintenance
 
 ## Best Practices
 
