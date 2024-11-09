@@ -1,5 +1,6 @@
 package inclub9.processor;
 
+import com.google.auto.service.AutoService;
 import inclub9.annotation.FieldLabel;
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -12,6 +13,7 @@ import java.util.*;
 
 @SupportedAnnotationTypes("inclub9.annotation.FieldLabel")
 @SupportedSourceVersion(SourceVersion.RELEASE_22)
+@AutoService(Processor.class)
 public class FieldLabelProcessor extends AbstractProcessor {
 
     @Override
