@@ -88,10 +88,9 @@ public class UserService {
 
 ## Best Practices
 
-1. Include generated sources directory in your `.gitignore`
-2. Remember to recompile after changing field names or labels
-3. Update references when renaming fields
-4. Use meaningful and consistent labels across your application
+1. Remember to recompile after changing field names or labels
+2. Update references when renaming fields
+3. Use meaningful and consistent labels across your application
 
 ## Requirements
 
