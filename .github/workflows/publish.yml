@@ -32,7 +32,7 @@ jobs:
           # ถ้ามีการเปลี่ยนแปลง README จะ commit กลับไป
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
-          git add README.md
+          git add .
           git diff --quiet && git diff --staged --quiet || git commit -m "Update README version [skip ci]"
           git push
 
