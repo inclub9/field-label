@@ -23,7 +23,7 @@
 <dependency>
     <groupId>com.github.inclub9</groupId>
     <artifactId>field-label</artifactId>
-    <version>1.0.7</version>
+    <version>${project.version}</version>
 </dependency>
 ```
 
