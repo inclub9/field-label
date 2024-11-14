@@ -6,7 +6,7 @@
 
 	<groupId>com.github.inclub9</groupId>
 	<artifactId>field-label</artifactId>
-	<version>1.1.9</version>
+	<version>1.2.0</version>
 	<packaging>jar</packaging>
 
 	<name>Field Label</name>
@@ -20,6 +20,7 @@
 		<github.owner>inclub9</github.owner>
 		<github.repo>field-label</github.repo>
 		<auto-service.version>1.1.1</auto-service.version>
+		<incap.version>1.0.0</incap.version>
 	</properties>
 
 	<!-- กำหนด distributionManagement สำหรับ GitHub Packages -->
@@ -37,6 +38,17 @@
 			<groupId>com.google.auto.service</groupId>
 			<artifactId>auto-service</artifactId>
 			<version>${auto-service.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.ltgt.gradle.incap</groupId>
+			<artifactId>incap</artifactId>
+			<version>${incap.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.ltgt.gradle.incap</groupId>
+			<artifactId>incap-processor</artifactId>
+			<version>${incap.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -123,6 +135,11 @@
 							<groupId>com.google.auto.service</groupId>
 							<artifactId>auto-service</artifactId>
 							<version>${auto-service.version}</version>
+						</path>
+						<path>
+							<groupId>net.ltgt.gradle.incap</groupId>
+							<artifactId>incap-processor</artifactId>
+							<version>1.0.0</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>

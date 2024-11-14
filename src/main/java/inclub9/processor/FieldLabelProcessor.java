@@ -2,16 +2,28 @@ package inclub9.processor;
 
 import com.google.auto.service.AutoService;
 import inclub9.annotation.FieldLabel;
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessor;
+
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.*;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
 import javax.tools.JavaFileObject;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Set;
+
+import static net.ltgt.gradle.incap.IncrementalAnnotationProcessorType.AGGREGATING;
 
 @SupportedAnnotationTypes("inclub9.annotation.FieldLabel")
 @SupportedSourceVersion(SourceVersion.RELEASE_22)
 @AutoService(Processor.class)
+@IncrementalAnnotationProcessor(AGGREGATING)
 public class FieldLabelProcessor extends AbstractProcessor {
     private static final int BUFFER_SIZE = 8192;
     private static final int INITIAL_LABELS_SIZE = 32;
