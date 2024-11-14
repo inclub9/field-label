@@ -15,98 +15,84 @@ import java.util.*;
 @SupportedSourceVersion(SourceVersion.RELEASE_22)
 @AutoService(Processor.class)
 public class FieldLabelProcessor extends AbstractProcessor {
+    private static final int INITIAL_MAP_CAPACITY = 16;
+    private static final int INITIAL_STRING_BUILDER_CAPACITY = 32;
+    private Messager messager;
+    private Filer filer;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
+        this.messager = processingEnv.getMessager();
+        this.filer = processingEnv.getFiler();
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        processingEnv.getMessager().printMessage(
-                Diagnostic.Kind.NOTE,
-                "Processing " + annotations.size() + " annotations"
-        );
+        if (annotations.isEmpty()) return false;
+
+        Map<String, Map<String, String>> labelsByClass = new HashMap<>(INITIAL_MAP_CAPACITY);
 
         for (TypeElement annotation : annotations) {
             Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(annotation);
-            processingEnv.getMessager().printMessage(
-                    Diagnostic.Kind.NOTE,
-                    "Found " + elements.size() + " elements with annotation"
-            );
-
-            Map<String, Set<String>> labelsByClass = new HashMap<>();
 
             for (Element element : elements) {
                 if (element.getKind() != ElementKind.FIELD) continue;
 
                 TypeElement classElement = (TypeElement) element.getEnclosingElement();
                 String className = classElement.getQualifiedName().toString();
-                String fieldName = element.getSimpleName().toString();
-                String label = element.getAnnotation(FieldLabel.class).value();
 
-                // Convert camelCase to UPPER_CASE
-                String constantName = camelCaseToUpperUnderscore(fieldName);
+                Map<String, String> fieldLabels = labelsByClass.computeIfAbsent(
+                        className,
+                        k -> new TreeMap<>()
+                );
 
-                labelsByClass.computeIfAbsent(className, k -> new TreeSet<>())
-                        .add(String.format("    public static final String %s = \"%s\";",
-                                constantName, label));
-            }
-
-            for (Map.Entry<String, Set<String>> entry : labelsByClass.entrySet()) {
-                try {
-                    generateLabelClass(entry.getKey(), entry.getValue());
-                } catch (IOException e) {
-                    processingEnv.getMessager().printMessage(
-                            Diagnostic.Kind.ERROR,
-                            "Failed to create source file: " + e.getMessage()
-                    );
-                }
+                fieldLabels.put(
+                        camelCaseToUpperUnderscore(element.getSimpleName().toString()),
+                        element.getAnnotation(FieldLabel.class).value()
+                );
             }
         }
+
+        labelsByClass.forEach(this::generateLabelClass);
         return true;
     }
 
     private String camelCaseToUpperUnderscore(String input) {
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder(INITIAL_STRING_BUILDER_CAPACITY);
+        int len = input.length();
 
-        for (int i = 0; i < input.length(); i++) {
-            char currentChar = input.charAt(i);
-
-            // Add underscore if it's an uppercase letter and not the first character
-            if (i > 0 && Character.isUpperCase(currentChar)) {
+        for (int i = 0; i < len; i++) {
+            char c = input.charAt(i);
+            if (i > 0 && Character.isUpperCase(c)) {
                 result.append('_');
             }
-
-            result.append(Character.toUpperCase(currentChar));
+            result.append(Character.toUpperCase(c));
         }
 
         return result.toString();
     }
 
-    private void generateLabelClass(String className, Set<String> constants) throws IOException {
-        String packageName = className.substring(0, className.lastIndexOf('.'));
-        String simpleClassName = className.substring(className.lastIndexOf('.') + 1);
+    private void generateLabelClass(String className, Map<String, String> fieldLabels) {
+        int lastDot = className.lastIndexOf('.');
+        String packageName = className.substring(0, lastDot);
+        String simpleClassName = className.substring(lastDot + 1);
         String labelClassName = simpleClassName + "Label";
-
         String sourceFile = packageName + "." + labelClassName;
-        processingEnv.getMessager().printMessage(
-                Diagnostic.Kind.NOTE,
-                "Generating " + sourceFile
-        );
 
-        JavaFileObject builderFile = processingEnv.getFiler().createSourceFile(sourceFile);
-        try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
-            out.println("package " + packageName + ";");
-            out.println();
+        try (PrintWriter out = new PrintWriter(filer.createSourceFile(sourceFile).openWriter())) {
+            out.println("package " + packageName + ";\n");
             out.println("public final class " + labelClassName + " {");
-            // Add CLASS_NAME constant
-            out.println("    public static final String CLASS_NAME = \"" + simpleClassName + "\";");
-            out.println();
-            out.println("    private " + labelClassName + "() {}");
-            out.println();
-            constants.forEach(out::println);
+            out.println("    public static final String CLASS_NAME = \"" + simpleClassName + "\";\n");
+            out.println("    private " + labelClassName + "() {}\n");
+
+            fieldLabels.forEach((fieldName, label) ->
+                    out.println("    public static final String " + fieldName + " = \"" + label + "\";")
+            );
+
             out.println("}");
+        } catch (IOException e) {
+            messager.printMessage(Diagnostic.Kind.ERROR, "Failed to generate " + sourceFile + ": " + e.getMessage());
         }
     }
 }
