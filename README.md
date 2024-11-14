@@ -14,16 +14,14 @@ A Java annotation processor that automatically generates constant classes for fi
 Add the following dependency to your `pom.xml`:
 
 ```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
+<repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+</repository>
 <dependency>
     <groupId>com.github.inclub9</groupId>
     <artifactId>field-label</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.9</version>
 </dependency>
 ```
 

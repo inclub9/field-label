@@ -6,9 +6,8 @@
 
 	<groupId>com.github.inclub9</groupId>
 	<artifactId>field-label</artifactId>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<packaging>jar</packaging>
-
 	<name>Field Label</name>
 	<description>Field label annotation processor for generate constant</description>
 
@@ -20,6 +19,7 @@
 		<github.owner>inclub9</github.owner>
 		<github.repo>field-label</github.repo>
 		<auto-service.version>1.1.1</auto-service.version>
+		<incap.version>1.0.0</incap.version>
 	</properties>
 
 	<!-- กำหนด distributionManagement สำหรับ GitHub Packages -->
@@ -39,43 +39,21 @@
 			<version>${auto-service.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-jpamodelgen</artifactId>
-			<version>6.5.3.Final</version>
-			<scope>provided</scope>
-			<optional>true</optional>
+			<groupId>net.ltgt.gradle.incap</groupId>
+			<artifactId>incap</artifactId>
+			<version>${incap.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>jakarta.persistence</groupId>
-			<artifactId>jakarta.persistence-api</artifactId>
-			<version>3.2.0</version>
+			<groupId>net.ltgt.gradle.incap</groupId>
+			<artifactId>incap-processor</artifactId>
+			<version>${incap.version}</version>
 			<scope>provided</scope>
-			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.13.0</version>
-				<configuration>
-					<source>${maven.compiler.source}</source>
-					<target>${maven.compiler.target}</target>
-					<encoding>${project.build.sourceEncoding}</encoding>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>com.google.auto.service</groupId>
-							<artifactId>auto-service</artifactId>
-							<version>${auto-service.version}</version>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
-
 			<!-- Source Plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -142,6 +120,60 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.13.0</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>com.google.auto.service</groupId>
+							<artifactId>auto-service</artifactId>
+							<version>${auto-service.version}</version>
+						</path>
+						<path>
+							<groupId>net.ltgt.gradle.incap</groupId>
+							<artifactId>incap-processor</artifactId>
+							<version>1.0.0</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>test-output</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>3.13.0</version>
+						<configuration>
+							<source>${maven.compiler.source}</source>
+							<target>${maven.compiler.target}</target>
+							<encoding>${project.build.sourceEncoding}</encoding>
+							<annotationProcessorPaths>
+								<path>
+									<groupId>com.google.auto.service</groupId>
+									<artifactId>auto-service</artifactId>
+									<version>${auto-service.version}</version>
+								</path>
+								<path>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${project.artifactId}</artifactId>
+									<version>${project.version}</version>
+								</path>
+							</annotationProcessorPaths>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
