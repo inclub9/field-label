@@ -8,7 +8,6 @@
 	<artifactId>field-label</artifactId>
 	<version>1.2.0</version>
 	<packaging>jar</packaging>
-
 	<name>Field Label</name>
 	<description>Field label annotation processor for generate constant</description>
 
