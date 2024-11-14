@@ -100,9 +100,6 @@ public class FieldLabelProcessor extends AbstractProcessor {
             out.println("package " + packageName + ";");
             out.println();
             out.println("public final class " + labelClassName + " {");
-            // Add CLASS_NAME constant
-            out.println("    public static final String CLASS_NAME = \"" + simpleClassName + "\";");
-            out.println();
             out.println("    private " + labelClassName + "() {}");
             out.println();
             constants.forEach(out::println);
