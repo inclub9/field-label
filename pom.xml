@@ -117,7 +117,7 @@
 									<directory>src/main/resources</directory>
 									<includes>
 										<include>README.md</include>
-										<include>README-th.md</include>
+										<include>README-TH.md</include>
 									</includes>
 									<filtering>true</filtering>
 								</resource>
