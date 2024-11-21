@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 import java.lang.annotation.Documented;
 
 @Documented
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface FieldLabel {
     String value();

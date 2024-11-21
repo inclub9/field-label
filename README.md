@@ -28,7 +28,7 @@ Add the following to your `pom.xml`:
 <dependency>
     <groupId>com.github.inclub9</groupId>
     <artifactId>field-label</artifactId>
-    <version>2.5.1</version>
+    <version>2.5.3</version>
 </dependency>
 ```
 
