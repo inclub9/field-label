@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SupportedAnnotationTypes("inclub9.annotation.FieldLabel")
-@SupportedSourceVersion(SourceVersion.RELEASE_22)
+@SupportedSourceVersion(SourceVersion.RELEASE_24)
 @AutoService(Processor.class)
 public class FieldLabelProcessor extends AbstractProcessor {
     private final Map<String, StringBuilder> constantBuilders = new ConcurrentHashMap<>();
