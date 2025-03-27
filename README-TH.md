@@ -28,7 +28,7 @@
 <dependency>
     <groupId>com.github.inclub9</groupId>
     <artifactId>field-label</artifactId>
-    <version>2.5.3</version>
+    <version>2.5.5</version>
 </dependency>
 ```
 
